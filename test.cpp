@@ -88,143 +88,155 @@ TEST_CASE("read right specfic"){
 }
 
 TEST_CASE("read right random horizontal"){
-    // 20 so the board won't be too big and it would take more time to read
-    size_t rowS = rand() % 20;
-    size_t colS = rand() % 15;
-    size_t lengthS = rand() % 15;
+        // 20 so the board won't be too big and it would take more time to read
+        size_t rowSR = rand() % 20;
+        size_t colSR = rand() % 15;
 
-    std::array<char, lengthS> s;
+        size_t rowSC = rand() % 20;
+        size_t colSC = rand() % 15;
+        size_t lengthS = rand() % 15;
+
+        std::array<char, lengthSR> sr;
+        std::array<char, lengthSR> sc;
+        for (size_t i = 0; i < lengthSR; i++)
+        {
+            sr.at(i) = '_';
+            sc.at(i) = '_';
+        }
+
+
+        for (size_t i = 0; i < lengthS; i++)
+        {
+            string t;
+            cout << "please write a string";
+            cin >> t;
+            int rowT = getrandom( rand()%20, rand()%20);
+            int colT =  getrandom( rand()%20, rand()%20);
+            int d = (rand() % 10) % 2;
+            b.post(rowT, colT, d, t);
+
+            // init the row string
+            if(d == 0 && rowSR == rowT)
+            {
+
+                //checks if start before our row string and there's hafifa beneihen
+                if(colT <= colSR && colSR <= colT + t.length())
+                {
+                    size_t copy_length;
+
+                    // if the temp ends before the original string
+                    if (colSR + sr.length() >= colT + t.length())
+                    {
+                        copy_length = colT + t.length() - colSR;
+                    }
+
+                    // if the original string end before the
+                    else
+                    {
+                        copy_length = sr.length();
+                    }
+
+
+                    for (size_t i = 0; i < copyLength; i++)
+                    {
+                        sr.at(i) = t.at(i - colT + colSR);
+                    }
+                }
+            
+
+                // if the temp start after the row string we would like to check
+                // and if there's hafifa
+                if(colSR + sr.length() >= colT && colT >= colSR)
+                {
+                    size_t copy_length;
+
+
+                    // if the temp string ends before the original string
+                    if(t.length() + colT <= sr.length() + colSR){
+                        copy_length = t.length();
+                    }
+
+                    else{
+                        copy_length = colT - colSR + sr.length();
+                    }
+
+                    // if the temp ends after the og string
+                    for (size_t i = 0; i < copy_length; i++)
+                    {
+                        sr.at(i - colSR + colT) = t.at(i);
+                    }
+            }
+        }
+        else if(d == 1 &&  rowT <= rowSR &&  rowSR <= rowT + t.length() && colSR +  lengthSR >= colT && colT >= colSR){
+            sr.at(colT - colSR) = t.at(rowT - rowSR);
+        }
+        // end of init the row string
+
+        // start of init the col string
+        if(d == 1 && colSC == colT)
+        {
+
+                //checks if start before our row string and if there's hafifa beneihen
+                if(rowT <= rowSC && rowSC <= rowT + t.length())
+                {
+                    size_t copy_length;
+
+                    // if the temp ends before the original string
+                    if (rowSC + sc.length() >= rowT + t.length())
+                    {
+                        copy_length = rowT + t.length() - rowSC;
+                    }
+
+                    // if the original string end before the
+                    else
+                    {
+                        copy_length = sc.length();
+                    }
+
+
+                    for (size_t i = 0; i < copyLength; i++)
+                    {
+                        sc.at(i) = t.at(i - rowlT + rowSC);
+                    }
+                }
+
+                // if the temp start after the row string we would like to check
+                // and if there's hafifa
+                if(rowSC + sc.length() >= rowT && rowT >= rowSC)
+                {
+                    size_t copy_length;
+
+
+                    // if the temp string ends before the original string
+                    if(t.length() + rowT <= sc.length() + rowSC){
+                        copy_length = t.length();
+                    }
+
+                    else{
+                        copy_length = rowT - rowSC + sc.length();
+                    }
+
+                    // if the temp ends after the og string
+                    for (size_t i = 0; i < copy_length; i++)
+                    {
+                        sc.at(i - rowSC + rowT) = t.at(i);
+                    }
+            }
+        }
+        else if(d == 0 &&  colT <= colSC && colSC <= colT + t.length() && rowSC + lengthS >= rowT && rowT >= rowSC){
+            sc.at(rowT - rowSC) = t.at(colT - colSC);
+        }
+        // end of init the col string
+
+    }
+
+    string srComp = b.read(rowSR, colSR, HORI, lengthS)
+    string scComp = b.read(rowSC, colSC, VER, lengthS)
     for (size_t i = 0; i < lengthS; i++)
     {
-        s.at(i) = '_';
+        CHECK_EQ(sr.at(i), srComp.at(i));
+        CHECK_EQ(sc.at(i), scComp.at(i));
     }
-    
-
-    for (size_t i = 0; i < lengthS; i++)
-    {
-        string t;
-        cout << "please write a string";
-        cin >> t;
-        int rowT = getrandom( rand()%20, rand()%20);
-        int colT =  getrandom( rand()%20, rand()%20);
-        int d = (rand() % 10) % 2;
-        b.post(rowT, colT, d, t);
-        if(d == 0 && rowS == rowT){
-            if(colT <= colS && colS <= colT + t.length()){
-                size_t copy_length;
-
-                // if the temp ends before the original string
-                if (colS + s.length() >= colT + t.length())
-                {
-                    copy_length = colT + t.length() - colS;
-                }
-                
-                // if the original string end before the 
-                else{
-                    copy_length = s.length();
-                }
-
-                
-                for (size_t i = 0; i < copyLength; i++)
-                {
-                    s.at(i) = t.at(i - colT + colS);
-                }
-            }
-
-            // if the temp start after the original string we would like to check
-            if(colS + s.length() >= colT && colT >= colS){
-
-                
-
-
-                size_t copy_length;
-                
-
-                // if the temp string ends before the original string
-                if(t.length() + colT <= s.length() + colS){
-                    copy_length = t.length();
-                }
-                else{
-                    copy_length = colT - colS + s.length();
-                }
-
-
-
-                // if the temp ends after the og string
-                for (size_t i = 0; i < copy_length; i++)
-                {
-                    s.at(i - colS + colT) = t.at(i);
-                }
-            }
-        }
-        else if(d == 1 &&  rowT <= rowS &&  rowS <= rowT + t.length() 
-                            && colS +  lengthS >= colT && colT >= colS){
-                                    s.at(col - colS) = t.at(row - randRowToReadFrom);
-        }
-
-    }
-
-    string s2 = b.read(rowS, colS, 0, lengthS)
-    for (size_t i = 0; i < lengthS; i++)
-    {
-        CHECK_EQ(s.at(i), s2.at(i));
-    }  
-}
-
-// for right col reading
-TEST_CASE("Right col reading"){
-    // 20 so the board won't be too big and it would take more time to read
-    size_t ansStartCol = rand() % 20;
-    size_t ansStartRow = rand() % 15;
-    size_t rowLengthToRead = rand() % 15;
-
-    std::array<char, rowLengthToRead> answerShouldBe;
-    for (size_t i = 0; i < rowLengthToRead; i++)
-    {
-        answerShouldBe.at(i) = '_';
-    }
-    
-
-    for (size_t i = 0; i < rowLengthToRead; i++)
-    { // to do abs value 
-        string s1;
-        cout << "please write a string";
-        cin >> s1;
-        int row = getrandom( rand()%20, rand()%20);
-        int col =  getrandom( rand()%20, rand()%20);
-        int d = (rand() % 10) % 2;
-        b.post(row, col, d, s1);
-        if(d == 0 && randRowToReadFrom == row){
-            if()
-
-            /*
-            if(s1.length() + col >= colReadingStart && colReadingStart >= col){
-                size_t copyLength = min{col + s1.length() - colReadingStart,  rowLengthToRead};
-                for (size_t i = 0; i < copyLength; i++)
-                {
-                    answerShouldBe.at(i) = s1.at(i - col + colReadingStart);
-                }
-            }
-            if(colReadingStart + rowLengthToRead >= col && col >= colReadingStart){
-                size_t copyLength = min{s1.length(),  rowLengthToRead + colReadingStart - col};
-                for (size_t i = 0; i < copyLength; i++)
-                {
-                    answerShouldBe.at(i - colReadingStart + col) = s1.at(i);
-                }
-            }*/
-        }
-        else if(d == 1 &&  row <= randRowToReadFrom &&  randRowToReadFrom <= row + s1.length() 
-                            && colReadingStart +  rowLengthToRead >= col && col >= colReadingStart){
-                                    answerShouldBe.at(col - colReadingStart) = s1.at(row - randRowToReadFrom);
-        }
-
-    }
-
-    string s2 = b.read(randRowToReadFrom, colReadingStart, 0, rowLengthToRead)
-    for (size_t i = 0; i < rowLengthToRead; i++)
-    {
-        CHECK_EQ(answerShouldBe.at(i), s2.at(i));
-    }  
 }
 
 
