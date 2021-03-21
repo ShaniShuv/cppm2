@@ -115,120 +115,131 @@ TEST_CASE("read right random horizontal"){
             int d = (rand() % 10) % 2;
             b.post(rowT, colT, d, t);
 
-            // init the row string
-            if(d == 0 && rowSR == rowT)
+            if(d==0)
             {
-
-                //checks if start before our row string and there's hafifa beneihen
-                if(colT <= colSR && colSR <= colT + t.length())
+                // starting row init
+                if(rowSR == rowT)
                 {
-                    size_t copy_length;
-
-                    // if the temp ends before the original string
-                    if (colSR + sr.length() >= colT + t.length())
+                    //checks if start before our row string and there's hafifa beneihen
+                    if(colT <= colSR && colSR <= colT + t.length())
                     {
-                        copy_length = colT + t.length() - colSR;
-                    }
+                        size_t copy_length;
 
-                    // if the original string end before the
-                    else
+                        // if the temp ends before the original string
+                        if (colSR + sr.length() >= colT + t.length())
+                        {
+                            copy_length = colT + t.length() - colSR;
+                        }
+
+                        // if the original string end before the
+                        else
+                        {
+                            copy_length = sr.length();
+                        }
+
+
+                        for (size_t i = 0; i < copyLength; i++)
+                        {
+                            sr.at(i) = t.at(i - colT + colSR);
+                        }
+                    }
+                
+
+                    // if the temp start after the row string we would like to check
+                    // and if there's hafifa
+                    if(colSR + sr.length() >= colT && colT >= colSR)
                     {
-                        copy_length = sr.length();
-                    }
+                        size_t copy_length;
 
 
-                    for (size_t i = 0; i < copyLength; i++)
-                    {
-                        sr.at(i) = t.at(i - colT + colSR);
+                        // if the temp string ends before the original string
+                        if(t.length() + colT <= sr.length() + colSR)
+                        {
+                            copy_length = t.length();
+                        }
+
+                        else
+                        {
+                            copy_length = colT - colSR + sr.length();
+                        }
+
+                        // if the temp ends after the og string
+                        for (size_t i = 0; i < copy_length; i++)
+                        {
+                            sr.at(i - colSR + colT) = t.at(i);
+                        }
                     }
+                }// done with row init
+                if(colT <= colSC && colSC <= colT + t.length() && rowSC + lengthS >= rowT && rowT >= rowSC)
+                {
+                    sc.at(rowT - rowSC) = t.at(colT - colSC);
                 }
-            
+            } // end of if d==0
 
-                // if the temp start after the row string we would like to check
-                // and if there's hafifa
-                if(colSR + sr.length() >= colT && colT >= colSR)
+            if(d==1)
+            {
+                // start of row init
+                if(rowT <= rowSR &&  rowSR <= rowT + t.length() && colSR +  lengthSR >= colT && colT >= colSR)
                 {
-                    size_t copy_length;
-
-
-                    // if the temp string ends before the original string
-                    if(t.length() + colT <= sr.length() + colSR){
-                        copy_length = t.length();
-                    }
-
-                    else{
-                        copy_length = colT - colSR + sr.length();
-                    }
-
-                    // if the temp ends after the og string
-                    for (size_t i = 0; i < copy_length; i++)
-                    {
-                        sr.at(i - colSR + colT) = t.at(i);
-                    }
-            }
-        }
-        else if(d == 1 &&  rowT <= rowSR &&  rowSR <= rowT + t.length() && colSR +  lengthSR >= colT && colT >= colSR){
-            sr.at(colT - colSR) = t.at(rowT - rowSR);
-        }
-        // end of init the row string
-
-        // start of init the col string
-        if(d == 1 && colSC == colT)
-        {
-
-                //checks if start before our row string and if there's hafifa beneihen
-                if(rowT <= rowSC && rowSC <= rowT + t.length())
-                {
-                    size_t copy_length;
-
-                    // if the temp ends before the original string
-                    if (rowSC + sc.length() >= rowT + t.length())
-                    {
-                        copy_length = rowT + t.length() - rowSC;
-                    }
-
-                    // if the original string end before the
-                    else
-                    {
-                        copy_length = sc.length();
-                    }
-
-
-                    for (size_t i = 0; i < copyLength; i++)
-                    {
-                        sc.at(i) = t.at(i - rowlT + rowSC);
-                    }
+                    sr.at(colT - colSR) = t.at(rowT - rowSR);
                 }
+                // end of init the row string
 
-                // if the temp start after the row string we would like to check
-                // and if there's hafifa
-                if(rowSC + sc.length() >= rowT && rowT >= rowSC)
+                // init for col string
+                if(colSC == colT)
                 {
-                    size_t copy_length;
+
+                        //checks if start before our row string and if there's hafifa beneihen
+                        if(rowT <= rowSC && rowSC <= rowT + t.length())
+                        {
+                            size_t copy_length;
+
+                            // if the temp ends before the original string
+                            if (rowSC + sc.length() >= rowT + t.length())
+                            {
+                                copy_length = rowT + t.length() - rowSC;
+                            }
+
+                            // if the original string end before the
+                            else
+                            {
+                                copy_length = sc.length();
+                            }
 
 
-                    // if the temp string ends before the original string
-                    if(t.length() + rowT <= sc.length() + rowSC){
-                        copy_length = t.length();
+                            for (size_t i = 0; i < copyLength; i++)
+                            {
+                                sc.at(i) = t.at(i - rowlT + rowSC);
+                            }
+                        }
+
+                        // if the temp start after the row string we would like to check
+                        // and if there's hafifa
+                        if(rowSC + sc.length() >= rowT && rowT >= rowSC)
+                        {
+                            size_t copy_length;
+
+
+                            // if the temp string ends before the original string
+                            if(t.length() + rowT <= sc.length() + rowSC){
+                                copy_length = t.length();
+                            }
+
+                            else{
+                                copy_length = rowT - rowSC + sc.length();
+                            }
+
+                            // if the temp ends after the og string
+                            for (size_t i = 0; i < copy_length; i++)
+                            {
+                                sc.at(i - rowSC + rowT) = t.at(i);
+                            }
+                        }
                     }
-
-                    else{
-                        copy_length = rowT - rowSC + sc.length();
-                    }
-
-                    // if the temp ends after the og string
-                    for (size_t i = 0; i < copy_length; i++)
-                    {
-                        sc.at(i - rowSC + rowT) = t.at(i);
-                    }
-            }
-        }
-        else if(d == 0 &&  colT <= colSC && colSC <= colT + t.length() && rowSC + lengthS >= rowT && rowT >= rowSC){
-            sc.at(rowT - rowSC) = t.at(colT - colSC);
-        }
-        // end of init the col string
-
-    }
+                } 
+                // end of init the col string
+            } // end of if d==1
+        }// end of for
 
     string srComp = b.read(rowSR, colSR, HORI, lengthS)
     string scComp = b.read(rowSC, colSC, VER, lengthS)
@@ -238,9 +249,3 @@ TEST_CASE("read right random horizontal"){
         CHECK_EQ(sc.at(i), scComp.at(i));
     }
 }
-
-
-// for right show
-TEST_CASE(""){
-}
-
