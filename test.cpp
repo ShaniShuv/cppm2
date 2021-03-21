@@ -1,5 +1,5 @@
 #include "doctest.h"
-#include "board.hpp"
+#include "Board.hpp"
 #include <stdexcept>
 #include <cmath>
 #include <array>
@@ -50,10 +50,132 @@ TEST_CASE("Don't initialize unnecessary"){
     CHECK_THROWS_MESSAGE(b.post(row, col, d, s1) == "not a valid diraction");
 }
 
-TEST_CASE("read right horizontal"){
+TEST_CASE("read right specfic"){
+    board b;
+    b.post(0, 0, 0 "abc");
+    string sRead = b.read(0, 0, 0, 4);
+    string sComp = "abc_"
+    for (size_t i = 0; i < 5; i++)
+    {
+        CHECK_EQ(sRead.at(i), sComp.at(i));
+    }
+    b.post(0, 5, "fghi ");
+    sRead = b.read(0, 0, 0, 10);
+    string sComp = "abc__fghi ";
+    for (size_t i = 0; i < 10; i++)
+    {
+        CHECK_EQ(sRead.at(i), sComp.at(i));
+    }
+
+    b.post(2, 1, 1, "shani");
+    sRead = b.read(0, 1, 1, 8);
+    string sComp = "c_shani_";
+    for (size_t i = 0; i < 8; i++)
+    {
+        CHECK_EQ(sRead.at(i), sComp.at(i));
+    }
+
+    // to check drissa
+     b.post(4, 0, 0, "  u");
+     b.post(5, 1, 0, "+v");
+    sRead = b.read(2, 2, 1, 4);
+    string sComp = "shuv";
+    for (size_t i = 0; i < 4; i++)
+    {
+        CHECK_EQ(sRead.at(i), sComp.at(i));
+    }
+
+}
+
+TEST_CASE("read right random horizontal"){
     // 20 so the board won't be too big and it would take more time to read
-    size_t randRowToReadFrom = rand() % 20;
-    size_t colReadingStart = rand() % 15;
+    size_t rowS = rand() % 20;
+    size_t colS = rand() % 15;
+    size_t lengthS = rand() % 15;
+
+    std::array<char, lengthS> s;
+    for (size_t i = 0; i < lengthS; i++)
+    {
+        s.at(i) = '_';
+    }
+    
+
+    for (size_t i = 0; i < lengthS; i++)
+    {
+        string t;
+        cout << "please write a string";
+        cin >> t;
+        int rowT = getrandom( rand()%20, rand()%20);
+        int colT =  getrandom( rand()%20, rand()%20);
+        int d = (rand() % 10) % 2;
+        b.post(rowT, colT, d, t);
+        if(d == 0 && rowS == rowT){
+            if(colT <= colS && colS <= colT + t.length()){
+                size_t copy_length;
+
+                // if the temp ends before the original string
+                if (colS + s.length() >= colT + t.length())
+                {
+                    copy_length = colT + t.length() - colS;
+                }
+                
+                // if the original string end before the 
+                else{
+                    copy_length = s.length();
+                }
+
+                
+                for (size_t i = 0; i < copyLength; i++)
+                {
+                    s.at(i) = t.at(i - colT + colS);
+                }
+            }
+
+            // if the temp start after the original string we would like to check
+            if(colS + s.length() >= colT && colT >= colS){
+
+                
+
+
+                size_t copy_length;
+                
+
+                // if the temp string ends before the original string
+                if(t.length() + colT <= s.length() + colS){
+                    copy_length = t.length();
+                }
+                else{
+                    copy_length = colT - colS + s.length();
+                }
+
+
+
+                // if the temp ends after the og string
+                for (size_t i = 0; i < copy_length; i++)
+                {
+                    s.at(i - colS + colT) = t.at(i);
+                }
+            }
+        }
+        else if(d == 1 &&  rowT <= rowS &&  rowS <= rowT + t.length() 
+                            && colS +  lengthS >= colT && colT >= colS){
+                                    s.at(col - colS) = t.at(row - randRowToReadFrom);
+        }
+
+    }
+
+    string s2 = b.read(rowS, colS, 0, lengthS)
+    for (size_t i = 0; i < lengthS; i++)
+    {
+        CHECK_EQ(s.at(i), s2.at(i));
+    }  
+}
+
+// for right col reading
+TEST_CASE("Right col reading"){
+    // 20 so the board won't be too big and it would take more time to read
+    size_t ansStartCol = rand() % 20;
+    size_t ansStartRow = rand() % 15;
     size_t rowLengthToRead = rand() % 15;
 
     std::array<char, rowLengthToRead> answerShouldBe;
@@ -64,7 +186,7 @@ TEST_CASE("read right horizontal"){
     
 
     for (size_t i = 0; i < rowLengthToRead; i++)
-    {
+    { // to do abs value 
         string s1;
         cout << "please write a string";
         cin >> s1;
@@ -73,6 +195,9 @@ TEST_CASE("read right horizontal"){
         int d = (rand() % 10) % 2;
         b.post(row, col, d, s1);
         if(d == 0 && randRowToReadFrom == row){
+            if()
+
+            /*
             if(s1.length() + col >= colReadingStart && colReadingStart >= col){
                 size_t copyLength = min{col + s1.length() - colReadingStart,  rowLengthToRead};
                 for (size_t i = 0; i < copyLength; i++)
@@ -86,7 +211,7 @@ TEST_CASE("read right horizontal"){
                 {
                     answerShouldBe.at(i - colReadingStart + col) = s1.at(i);
                 }
-            }
+            }*/
         }
         else if(d == 1 &&  row <= randRowToReadFrom &&  randRowToReadFrom <= row + s1.length() 
                             && colReadingStart +  rowLengthToRead >= col && col >= colReadingStart){
@@ -94,7 +219,7 @@ TEST_CASE("read right horizontal"){
         }
 
     }
-    
+
     string s2 = b.read(randRowToReadFrom, colReadingStart, 0, rowLengthToRead)
     for (size_t i = 0; i < rowLengthToRead; i++)
     {
@@ -102,7 +227,8 @@ TEST_CASE("read right horizontal"){
     }  
 }
 
+
 // for right show
-TEST_CASE("Don't initialize unnecessary"){
+TEST_CASE(""){
 }
 
