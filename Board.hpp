@@ -2,10 +2,14 @@
 #include <string>
 #include "Direction.hpp"
 #include <vector>
+#include <cmath>
 #include <map>
 using std::vector;
 using namespace std;
 using ariel::Direction;
+
+
+const u_int UINT_MAX = (u_int)pow(2, 32);
 
 namespace ariel{
     class Board;
@@ -26,8 +30,8 @@ class ariel::Board {
         // constructor
         Board()
         {
-            sri = 0; // start row index
-            sci = 0; // start col
+            sri = UINT_MAX-1; // start row index
+            sci = UINT_MAX-1; // start col
             eri = 0; // end row index
             eci = 0; // end col
             map<pair<u_int, u_int>, char> bm; // board map

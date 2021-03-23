@@ -241,13 +241,22 @@ TEST_CASE("read right random"){
             }
             // end of init the col string
         } // end of if d==1
+
+
+		string srComp = b.read(rowSR, colSR, HORI, lengthS);
+		string scComp = b.read(rowSC, colSC, VER, lengthS);
+		for (size_t i = 0; i < lengthS; i++)
+		{
+			CHECK_EQ(sr.at(i), srComp.at(i));
+			CHECK_EQ(sc.at(i), scComp.at(i));
+		}
     }// end of for
 
-    string srComp = b.read(rowSR, colSR, HORI, lengthS);
-    string scComp = b.read(rowSC, colSC, VER, lengthS);
-    for (size_t i = 0; i < lengthS; i++)
-    {
-        CHECK_EQ(sr.at(i), srComp.at(i));
-        CHECK_EQ(sc.at(i), scComp.at(i));
-    }
+    // string srComp = b.read(rowSR, colSR, HORI, lengthS);
+    // string scComp = b.read(rowSC, colSC, VER, lengthS);
+    // for (size_t i = 0; i < lengthS; i++)
+    // {
+    //     CHECK_EQ(sr.at(i), srComp.at(i));
+    //     CHECK_EQ(sc.at(i), scComp.at(i));
+    // }
 }   

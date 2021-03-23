@@ -2,9 +2,11 @@
 #include "Direction.hpp"
 #include <iostream>
 #include <map>
+#include <cmath>
 using ariel::Direction;
 using namespace std;
 
+// const u_int UINT_MAX = (u_int)pow(2, 32);
 const Direction HORI = Direction::Horizontal;
 const Direction VER = Direction::Vertical;
 
@@ -19,27 +21,44 @@ namespace ariel
         {
             return;
         }
-        u_int temp = (u_int)min((size_t)row, (size_t)row + s.length());
-        if(row > temp )
+        if(row < sri)
         {
-            this->sri = row;
+            sri = row;
         }
-        if(col > this->sci)
+        if(col < sci)
         {
-            this->sci = col;
+            sci = col;
+
+            // mytest
+            cout<< "srci"<< endl;
+        }
+        if(row > eri)
+        {
+            eri = row;
+        }
+        if(col > eci)
+        {
+            eci = col;
         }
 
-        temp = (u_int)min((size_t)row, (size_t)row + s.length());
         if(dir == HORI)
         { 
-            if(row + s.length() > row && row + s.length() > this->eri)
+            
+            if(col < col + s.length())
             {
-                this->eri = row + s.length();
+                if(col + s.length() > eci)
+                {
+                    eci = col + s.length();
+                }
+                
             }
-            else if(row + s.length() < row && temp < this->sri)
-            {   
-                this->sri = temp;
+            else
+            {
+                sci = 0;
+                eci = UINT_MAX;
             }
+            
+
             for (size_t i = 0; i < s.length(); i++)
             {
                 bm[make_pair(row, col)] = s.at(i);
@@ -50,14 +69,18 @@ namespace ariel
 
         else
         { 
-            temp = (u_int)min((size_t)col, (size_t)col + s.length());
-            if(col + s.length() > col && col + s.length() > this->eci)
+            if(row < row + s.length())
             {
-                this->eci = col + s.length();
+                if(row + s.length() > eri)
+                {
+                    eri = row + s.length();
+                }
+                
             }
-            else if(col + s.length() < col && temp < this->sci)
-            {   
-                this->sci = temp;
+            else
+            {
+                sri = 0;
+                eri = UINT_MAX;
             }
             for (size_t i = 0; i < s.length(); i++)
             {
@@ -73,7 +96,10 @@ namespace ariel
         if(bm.empty()){
             return "the board is empty";
         }
+
         string st;
+        // st += row;
+        // st += ": ";
         if(dir == HORI){
             for (size_t i = 0; i < len; i++)
             {
@@ -100,6 +126,18 @@ namespace ariel
             }
             
         }
+
+//my test
+        // cout<< "sri"<< endl;
+        // cout<< sri << endl;
+        // cout<< "eri"<< endl;
+        // cout<<eri << endl;
+        // cout<< "sci"  << endl;
+        // cout<< sci << endl;
+        // cout<< "eci" << endl;
+        // cout<< eci << endl;
+        // cout << '\n' <<endl;
+
         return st;
     }
 
@@ -108,11 +146,16 @@ namespace ariel
         if(bm.empty()){
             cout << "the board is empty"<<endl;
         }
-        u_int row = sri;
+        u_int row = sri - 1;
         u_int len = eri - sri + 3;
-        for (size_t i = 0; i < eri-sri; i++)
+
+        for (size_t i = 0; i <= eri-sri; i++)
         {
-            string temp = read(row, sci - 1, HORI, len);
+            string temp;
+            cout << (row + i);
+            temp+= ": ";
+            temp += read(row + i, sci - 1, HORI, len);
+            cout << temp << endl;
         }        
     }
     
