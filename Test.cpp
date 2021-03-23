@@ -10,7 +10,10 @@ using namespace ariel;
 #include <string>
 using namespace std;
 
+const Direction HORI = Direction::Horizontal;
+const Direction VER = Direction::Vertical;
 
+// a func to get a random positive int
 u_int getrandom(u_int min, u_int max){
 	// just to be sure
 	if(min > max){
@@ -26,6 +29,7 @@ u_int getrandom(u_int min, u_int max){
 	return r;
 }
 
+// a func to get a random string
 string randString()
 {
 	u_int len = (u_int) (rand() % 20); 
@@ -38,36 +42,37 @@ string randString()
 	
 }
 
-
+// first of all we check a specific test
 TEST_CASE("read right specfic"){
 	ariel::Board b;
-	b.post(0, 0, ariel::Direction::Horizontal, "abc");
-	string sRead = b.read(0, 0, ariel::Direction::Horizontal, 4);
+	b.post(0, 0, HORI, "abc");
+	string sRead = b.read(0, 0, HORI, 4);
+
 	string sComp = "abc_";
-			for (size_t i = 0; i < 5; i++)
-			{
-				CHECK_EQ(sRead.at(i), sComp.at(i));
-			}
-	b.post(0, 5,ariel::Direction::Horizontal, "fghi ");
-	sRead = b.read(0, 0, ariel::Direction::Horizontal, 10);
+	for (size_t i = 0; i < 4; i++)
+	{
+		CHECK_EQ(sRead.at(i), sComp.at(i));
+	}
+	b.post(0, 5, HORI, "fghi ");
+	sRead = b.read(0, 0, HORI, 10);
 	sComp = "abc__fghi ";
 	for (size_t i = 0; i < 10; i++)
 	{
 		CHECK_EQ(sRead.at(i), sComp.at(i));
 	}
 
-	b.post(2, 1, ariel::Direction::Vertical, "shani");
-	sRead = b.read(0, 1, ariel::Direction::Vertical, 8);
-	sComp = "c_shani_";
+	b.post(2, 1, VER, "shani");
+	sRead = b.read(0, 1, VER, 8);
+	sComp = "b_shani_";
 	for (size_t i = 0; i < 8; i++)
 	{
 		CHECK_EQ(sRead.at(i), sComp.at(i));
 	}
 
 	// to check drissa
-	b.post(4, 0, ariel::Direction::Horizontal, "  u");
-	b.post(5, 1, ariel::Direction::Horizontal, "+v");
-	sRead = b.read(2, 2, ariel::Direction::Vertical, 4);
+	b.post(4, 0, HORI, " u");
+	b.post(5, 0, HORI, "+v");
+	sRead = b.read(2, 1, VER, 4);
 	sComp = "shuv";
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -76,7 +81,7 @@ TEST_CASE("read right specfic"){
 
 }
 
-TEST_CASE("read right random horizontal"){
+TEST_CASE("read right random"){
 	ariel::Board b;
 
 	// 20 so the board won't be too big and it would take more time to read
@@ -105,11 +110,11 @@ TEST_CASE("read right random horizontal"){
         u_int d = rand() % 2;
         if(d == 0)
         {
-            b.post(rowT, colT, ariel::Direction::Horizontal, t);
+            b.post(rowT, colT, HORI, t);
         }
         else
         {
-            b.post(rowT, colT, ariel::Direction::Vertical, t);
+            b.post(rowT, colT, VER, t);
         }
 		
 
@@ -238,8 +243,8 @@ TEST_CASE("read right random horizontal"){
         } // end of if d==1
     }// end of for
 
-    string srComp = b.read(rowSR, colSR, ariel::Direction::Horizontal, lengthS);
-    string scComp = b.read(rowSC, colSC, ariel::Direction::Vertical, lengthS);
+    string srComp = b.read(rowSR, colSR, HORI, lengthS);
+    string scComp = b.read(rowSC, colSC, VER, lengthS);
     for (size_t i = 0; i < lengthS; i++)
     {
         CHECK_EQ(sr.at(i), srComp.at(i));

@@ -5,6 +5,11 @@
         "iostream": "cpp",
         "string": "cpp",
         "chrono": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "initializer_list": "cpp",
+        "ostream": "cpp"
     }
 }

@@ -1,54 +1,118 @@
 #include "Board.hpp"
 #include "Direction.hpp"
+#include <iostream>
 #include <map>
 using ariel::Direction;
 using namespace std;
 
+const Direction HORI = Direction::Horizontal;
+const Direction VER = Direction::Vertical;
 
 namespace ariel 
 {
 
-    Board::Board()
-    {
-        u_int sri = 0; // start row index
-        u_int sci = 0; // start col
-        u_int eri = 0; // end row index
-        u_int eci = 0; // end col
-        map< map<u_int, u_int>, char> bm; // board map
-    }
+    
 
-    void Board::post(u_int row, u_int col, Direction dir, string s){
-        u_int temp = this->sri;
-        if(row > temp ){
+    void Board::post(u_int row, u_int col, Direction dir, string s)
+    {
+        if(s.length() == 0) 
+        {
+            return;
+        }
+        u_int temp = (u_int)min((size_t)row, (size_t)row + s.length());
+        if(row > temp )
+        {
             this->sri = row;
         }
-        temp = this->sci;
-        if(col > temp ){
+        if(col > this->sci)
+        {
             this->sci = col;
         }
-        for (size_t i = 0; i < s.length(); i++)
-        {
-            this->bm.insert<< row, col>, s.at(i)>;
+
+        temp = (u_int)min((size_t)row, (size_t)row + s.length());
+        if(dir == HORI)
+        { 
+            if(row + s.length() > row && row + s.length() > this->eri)
+            {
+                this->eri = row + s.length();
+            }
+            else if(row + s.length() < row && temp < this->sri)
+            {   
+                this->sri = temp;
+            }
+            for (size_t i = 0; i < s.length(); i++)
+            {
+                bm[make_pair(row, col)] = s.at(i);
+                col++;
+            }
+
         }
+
+        else
+        { 
+            temp = (u_int)min((size_t)col, (size_t)col + s.length());
+            if(col + s.length() > col && col + s.length() > this->eci)
+            {
+                this->eci = col + s.length();
+            }
+            else if(col + s.length() < col && temp < this->sci)
+            {   
+                this->sci = temp;
+            }
+            for (size_t i = 0; i < s.length(); i++)
+            {
+                bm[make_pair(row, col)] = s.at(i);
+                row++;
+            }
+
+        }
+        
     }
 
     string Board::read(u_int row, u_int col, Direction dir, u_int len){
-        string s = "";
-        for (size_t i = 0; i < len; i++)
-        {
-            s += bm.get(row).get(col);
+        if(bm.empty()){
+            return "the board is empty";
         }
-        
-        return s;
+        string st;
+        if(dir == HORI){
+            for (size_t i = 0; i < len; i++)
+            {
+                char c = bm[make_pair(row, col)];
+                if(c==0) 
+                {
+                    c = '_';
+                }
+                st += c;
+                col++;
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < len; i++)
+            {
+                char c = bm[make_pair(row, col)];
+                if(c==0)
+                {
+                    c = '_';
+                }
+                st += c;
+                row++;
+            }
+            
+        }
+        return st;
     }
 
     // TODO make const
     void Board::show(){
+        if(bm.empty()){
+            cout << "the board is empty"<<endl;
+        }
         u_int row = sri;
-        u_int len = erc - src + 3;
+        u_int len = eri - sri + 3;
         for (size_t i = 0; i < eri-sri; i++)
         {
-            string temp = read(row, sci - 1, Direction::Horizontal, len);
+            string temp = read(row, sci - 1, HORI, len);
         }        
     }
     
