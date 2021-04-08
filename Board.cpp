@@ -93,9 +93,9 @@ namespace ariel
     }
 
     string Board::read(u_int row, u_int col, Direction dir, u_int len){
-        if(bm.empty()){
-            return "the board is empty";
-        }
+//         if(bm.empty()){
+//             return "the board is empty";
+//         }
 
         string st;
         // st += row;
